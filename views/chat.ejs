@@ -1,0 +1,208 @@
+<%- include('header') %>
+  <script src="/socket.io/socket.io.js"></script>
+
+  <div class="flex-1 flex flex-col bg-gray-900 relative overflow-hidden">
+    <!-- 64px del navbar aprox -->
+
+    <!-- Chat Header -->
+    <div class="bg-gray-800 px-6 py-4 border-b border-gray-700 flex items-center justify-between shadow-sm z-10">
+      <div class="flex items-center space-x-4">
+        <div
+          class="bg-brand-900 text-brand-300 rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg">
+          #<%= room %>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-white">Sala <%= room %>
+          </h2>
+          <span class="text-sm text-green-400 flex items-center">
+            <span class="h-2 w-2 bg-green-400 rounded-full mr-1"></span> En línea
+          </span>
+        </div>
+      </div>
+      <a href="/chat-list" class="text-sm text-gray-400 hover:text-brand-400 font-medium transition-colors">Volver a
+        Salas</a>
+    </div>
+
+    <!-- Messages Area -->
+    <div id="messages-container"
+      class="flex-1 p-6 overflow-y-auto custom-scrollbar space-y-6 flex flex-col pb-32 overscroll-contain">
+
+      <% if (messages && messages.length> 0) { %>
+        <% messages.forEach(message=> { %>
+          <% const isMe=(user && message.usuario===user.nomuser); %>
+
+            <div class="flex items-end <%= isMe ? 'justify-end' : '' %>">
+              <% if (!isMe) { %>
+                <img src="/uploads/<%= message.userPic || 'default.png' %>" alt="Avatar"
+                  class="h-8 w-8 rounded-full border border-gray-600 mb-1 object-cover flex-shrink-0">
+                <% } %>
+
+                  <div
+                    class="flex flex-col space-y-1 text-sm max-w-[75%] mx-2 <%= isMe ? 'order-1 items-end' : 'order-2 items-start' %>">
+                    <% if (!isMe) { %>
+                      <span class="text-xs text-gray-400 font-medium ml-1">
+                        <%= message.usuario %>
+                      </span>
+                      <% } %>
+
+                        <div
+                          class="px-4 py-2 rounded-2xl shadow-sm inline-block <%= isMe ? 'bg-brand-600 text-white rounded-br-none' : 'bg-gray-800 text-white border border-gray-700 rounded-bl-none' %>">
+                          <p class="whitespace-pre-wrap">
+                            <%= message.mensaje %>
+                          </p>
+                        </div>
+
+                        <span class="text-xs text-gray-500 mt-1 mr-1">
+                          <%= new Date(message.date || new Date()).toLocaleTimeString([], {hour: '2-digit' ,
+                            minute:'2-digit'}) %>
+                        </span>
+                  </div>
+
+                  <% if (isMe) { %>
+                    <img src="/uploads/<%= message.userPic || 'default.png' %>" alt="Avatar"
+                      class="h-8 w-8 rounded-full border border-gray-600 mb-1 order-3 object-cover flex-shrink-0">
+                    <% } %>
+            </div>
+
+            <% }); %>
+              <% } else { %>
+                <div class="flex justify-center items-center h-full text-gray-400 text-sm flex-col">
+                  <svg class="h-12 w-12 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  <p>No hay mensajes en esta sala aún. ¡Rompe el hielo!</p>
+                </div>
+                <% } %>
+
+                  <!-- Typing Indicator Area -->
+                  <div id="typing-indicator" class="hidden flex items-end opacity-0 transition-opacity duration-300">
+                    <div class="flex flex-col space-y-1 text-sm max-w-[75%] mx-2 items-start order-2">
+                      <span id="typer-name" class="text-xs text-brand-400 font-medium ml-1"></span>
+                      <div
+                        class="px-4 py-3 rounded-2xl shadow-sm inline-block bg-gray-800 text-white border border-gray-700 rounded-bl-none flex space-x-1">
+                        <span class="h-1.5 w-1.5 bg-gray-500 rounded-full animate-bounce"></span>
+                        <span class="h-1.5 w-1.5 bg-gray-500 rounded-full animate-bounce"
+                          style="animation-delay: 0.2s"></span>
+                        <span class="h-1.5 w-1.5 bg-gray-500 rounded-full animate-bounce"
+                          style="animation-delay: 0.4s"></span>
+                      </div>
+                    </div>
+                  </div>
+
+    </div> <!-- Fin Messages Area -->
+
+    <!-- Input Area (Fixed at bottom inner context) -->
+    <div class="absolute bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 p-4">
+      <div class="max-w-4xl mx-auto">
+        <form id="message-form"
+          class="flex items-end space-x-3 bg-gray-700 rounded-full border border-gray-600 p-1 pl-4 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 transition-shadow shadow-sm">
+
+          <input type="text" id="mensaje"
+            class="flex-1 bg-transparent py-3 px-2 border-0 focus:ring-0 text-white placeholder-gray-400 outline-none text-sm h-full"
+            placeholder="Escribe tu mensaje aquí..." autocomplete="off" required>
+
+          <button type="submit"
+            class="bg-brand-600 text-white rounded-full p-3 hover:bg-brand-700 focus:outline-none transition-transform transform active:scale-95 shadow-md flex-shrink-0 flex items-center justify-center">
+            <svg class="h-5 w-5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const socket = io();
+    const room = "<%= room %>";
+    const user = "<%= user ? user.nomuser : '' %>";
+
+    // Elementos UI
+    const messageContainer = document.getElementById("messages-container");
+    const messageForm = document.getElementById("message-form");
+    const inputMensaje = document.getElementById("mensaje");
+    const typingIndicator = document.getElementById("typing-indicator");
+    const typerName = document.getElementById("typer-name");
+
+    // Autoscroll
+    const scrollToBottom = () => {
+      messageContainer.scrollTop = messageContainer.scrollHeight;
+    };
+    setTimeout(scrollToBottom, 100);
+
+    // Unirse
+    socket.emit("joinRoom", { user, sala: room });
+
+    // Evento envio form
+    messageForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const mensaje = inputMensaje.value.trim();
+      if (!mensaje) return;
+
+      // Detener typing inmediatamente al enviar
+      const profilePic = "<%= user && user.profilePic ? user.profilePic : 'default.png' %>";
+      socket.emit("stopTyping", { usuario: user, sala: room });
+      socket.emit("toChat", { usuario: user, mensaje, sala: room, profilePic: profilePic });
+      inputMensaje.value = "";
+      inputMensaje.focus();
+    });
+
+    // Escuchar mensaje nuevo
+    socket.on("message", function (data) {
+      const placeholder = messageContainer.querySelector('.h-full.text-gray-400');
+      if (placeholder) placeholder.remove();
+
+      const div = document.createElement("div");
+      const isMe = data.usuario === user;
+      const time = new Date(data.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      div.className = `flex items-end ${isMe ? 'justify-end' : ''}`;
+      div.innerHTML = `
+      ${!isMe ? `<img src="/uploads/${data.profilePic || 'default.png'}" class="h-8 w-8 rounded-full border border-gray-600 mb-1 object-cover flex-shrink-0">` : ''}
+      <div class="flex flex-col space-y-1 text-sm max-w-[75%] mx-2 ${isMe ? 'order-1 items-end' : 'order-2 items-start'}">
+        ${!isMe ? `<span class="text-xs text-gray-400 font-medium ml-1">${data.usuario}</span>` : ''}
+        <div class="px-4 py-2 rounded-2xl shadow-sm inline-block ${isMe ? 'bg-brand-600 text-white rounded-br-none' : 'bg-gray-800 text-white border border-gray-700 rounded-bl-none'}">
+          <p class="whitespace-pre-wrap">${data.mensaje}</p>
+        </div>
+        <span class="text-xs text-gray-500 mt-1 mr-1">${time}</span>
+      </div>
+      ${isMe ? `<img src="/uploads/${data.profilePic || 'default.png'}" class="h-8 w-8 rounded-full border border-gray-600 mb-1 order-3 object-cover flex-shrink-0">` : ''}
+    `;
+
+      // Lo incrustamos antes del indicador de typing
+      messageContainer.insertBefore(div, typingIndicator);
+      scrollToBottom();
+    });
+
+    // Lógica "Escribiendo..."
+    let typingTimer;
+    const TYPING_TIMER_LENGTH = 1500; // ms
+
+    inputMensaje.addEventListener("input", () => {
+      socket.emit("typing", { usuario: user, sala: room });
+
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        socket.emit("stopTyping", { usuario: user, sala: room });
+      }, TYPING_TIMER_LENGTH);
+    });
+
+    socket.on("typing", (username) => {
+      typerName.innerText = `${username} está escribiendo...`;
+      typingIndicator.classList.remove("hidden");
+      // Pequeño delay para permitir que Tailwind anime opacity
+      requestAnimationFrame(() => typingIndicator.classList.remove("opacity-0"));
+      scrollToBottom();
+    });
+
+    socket.on("stopTyping", () => {
+      typingIndicator.classList.add("opacity-0");
+      setTimeout(() => typingIndicator.classList.add("hidden"), 300); // 300ms duration
+    });
+
+  </script>
+
+  <%- include('footer') %>

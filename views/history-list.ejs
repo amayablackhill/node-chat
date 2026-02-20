@@ -1,0 +1,88 @@
+<%- include('header') %>
+  <div class="h-full bg-gray-900 flex-1 py-10 overflow-y-auto custom-scrollbar">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="text-center mb-10">
+        <div
+          class="w-16 h-16 bg-gray-800 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-700">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white sm:text-4xl">
+          Consulta el Historial
+        </h1>
+        <p class="mt-4 text-lg text-gray-400">
+          Elige una sala para recuperar y visualizar conversaciones pasadas.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 mt-8">
+
+        <!-- Sala 1 -->
+        <a href="/history/view?salas=1"
+          class="relative rounded-2xl border border-gray-700 bg-gray-800 p-6 shadow-sm cursor-pointer hover:border-brand-500 hover:ring-1 hover:ring-brand-500 hover:bg-gray-750 transition-all block group">
+          <div class="flex items-center">
+            <div
+              class="h-12 w-12 rounded-full bg-blue-900 flex items-center justify-center text-blue-300 text-xl font-bold">
+              1</div>
+            <div class="ml-4">
+              <span class="block text-lg font-medium text-white group-hover:text-brand-400 transition-colors">Sala
+                General</span>
+              <span class="block text-sm text-gray-400">Historial completo</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Sala 2 -->
+        <a href="/history/view?salas=2"
+          class="relative rounded-2xl border border-gray-700 bg-gray-800 p-6 shadow-sm cursor-pointer hover:border-brand-500 hover:ring-1 hover:ring-brand-500 hover:bg-gray-750 transition-all block group">
+          <div class="flex items-center">
+            <div
+              class="h-12 w-12 rounded-full bg-green-900 flex items-center justify-center text-green-300 text-xl font-bold">
+              2</div>
+            <div class="ml-4">
+              <span class="block text-lg font-medium text-white group-hover:text-brand-400 transition-colors">Desarrollo
+                Web</span>
+              <span class="block text-sm text-gray-400">Bitácora de programación</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Sala 3 -->
+        <a href="/history/view?salas=3"
+          class="relative rounded-2xl border border-gray-700 bg-gray-800 p-6 shadow-sm cursor-pointer hover:border-brand-500 hover:ring-1 hover:ring-brand-500 hover:bg-gray-750 transition-all block group">
+          <div class="flex items-center">
+            <div
+              class="h-12 w-12 rounded-full bg-purple-900 flex items-center justify-center text-purple-300 text-xl font-bold">
+              3</div>
+            <div class="ml-4">
+              <span
+                class="block text-lg font-medium text-white group-hover:text-brand-400 transition-colors">Videojuegos</span>
+              <span class="block text-sm text-gray-400">Archivo Gamer</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Sala 4 -->
+        <a href="/history/view?salas=4"
+          class="relative rounded-2xl border border-gray-700 bg-gray-800 p-6 shadow-sm cursor-pointer hover:border-brand-500 hover:ring-1 hover:ring-brand-500 hover:bg-gray-750 transition-all block group">
+          <div class="flex items-center">
+            <div
+              class="h-12 w-12 rounded-full bg-orange-900 flex items-center justify-center text-orange-300 text-xl font-bold">
+              4</div>
+            <div class="ml-4">
+              <span
+                class="block text-lg font-medium text-white group-hover:text-brand-400 transition-colors">Off-Topic</span>
+              <span class="block text-sm text-gray-400">Registros varios</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+  <%- include('footer') %>

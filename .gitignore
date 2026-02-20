@@ -1,0 +1,4 @@
+
+# Ignorar carpetas de datos de MongoDB
+mongodb-data/
+mongodb-data

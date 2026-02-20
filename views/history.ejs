@@ -1,0 +1,79 @@
+<%- include('header') %>
+
+  <div class="h-full bg-gray-900 flex-1 py-10 overflow-y-auto custom-scrollbar">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Title Section -->
+      <div class="md:flex md:items-center md:justify-between mb-8">
+        <div class="flex-1 min-w-0">
+          <h2 class="text-2xl font-bold leading-7 text-white sm:text-3xl sm:truncate flex items-center">
+            <svg class="w-8 h-8 mr-3 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Bitácora: Sala <%= room %>
+          </h2>
+          <p class="mt-1 text-sm text-gray-400">
+            Registro inmutable de todos los mensajes enviados a este canal.
+          </p>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+          <form action="/history/delete" method="post"
+            onsubmit="return confirm('¿Estás seguro de que deseas borrar TODO el historial de la Sala <%= room %>? Esta acción es irreversible.');">
+            <input type="hidden" name="room" value="<%= room %>">
+            <button type="submit"
+              class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+              <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Purgar Sala
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Log Card -->
+      <div class="bg-gray-800 shadow overflow-hidden sm:rounded-lg border border-gray-700">
+        <ul role="list" class="divide-y divide-gray-700">
+          <% if (messages && messages.length> 0) { %>
+            <% messages.forEach(message=> { %>
+              <li class="px-4 py-4 sm:px-6 hover:bg-gray-750 transition-colors">
+                <div class="flex items-center space-x-4">
+                  <div class="flex-shrink-0">
+                    <img class="h-10 w-10 rounded-full border border-gray-600 object-cover flex-shrink-0"
+                      src="/uploads/<%= message.userPic || 'default.png' %>" alt="<%= message.usuario %>">
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-brand-400 truncate">
+                      @<%= message.usuario %>
+                    </p>
+                    <p class="text-sm text-gray-300 whitespace-pre-wrap mt-1">
+                      <%= message.mensaje %>
+                    </p>
+                  </div>
+                  <div class="flex-shrink-0 text-right">
+                    <p class="text-xs text-gray-500">
+                      <%= new Date(message.date || new Date()).toLocaleString() %>
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <% }); %>
+                <% } else { %>
+                  <li class="px-4 py-12 text-center sm:px-6">
+                    <svg class="mx-auto h-12 w-12 text-gray-600 mb-3" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="block text-sm font-medium text-gray-400">No hay registros en esta sala.</span>
+                  </li>
+                  <% } %>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <%- include('footer') %>

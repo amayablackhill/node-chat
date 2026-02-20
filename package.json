@@ -1,0 +1,32 @@
+{
+  "name": "chat_exam",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.7",
+    "debug": "~2.6.9",
+    "dotenv": "^17.3.1",
+    "ejs": "^3.1.5",
+    "express": "~4.16.1",
+    "express-session": "*",
+    "fs": "0.0.1-security",
+    "http-errors": "~1.6.3",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^5.12.3",
+    "multer": "*",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
